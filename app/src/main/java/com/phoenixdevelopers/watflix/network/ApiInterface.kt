@@ -10,6 +10,14 @@ interface ApiInterface {
     @GET("get_all_photos")
     suspend fun getAllMovies():Movies
 
+
+    @GET("get_suggested_photos")
+    suspend fun getSimilarMovies(
+
+        @Query("photo_id") movieId: String
+
+    ):Movies
+
     @GET("get_single_photo_detail")
     suspend fun getMovieDetail(
 

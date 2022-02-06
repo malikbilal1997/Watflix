@@ -8,4 +8,6 @@ interface MoviesRepo {
     fun getAllMovies(): Flow<List<Movie>>
 
     suspend fun getMovieDetail(movieId: String): Movie
+
+    fun getSimilarMovies(movieId: String): Flow<List<Movie>>
 }

@@ -13,7 +13,7 @@ data class Movie(
     @SerializedName("year")
     val year:String,
 
-    @SerializedName("genre")
+    @SerializedName("genres")
     val genre:String,
 
     @SerializedName("rating")

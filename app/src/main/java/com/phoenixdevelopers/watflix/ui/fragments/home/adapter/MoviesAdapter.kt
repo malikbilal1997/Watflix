@@ -30,7 +30,6 @@ class MoviesAdapter(private val isGrid: Boolean) : ListAdapter<Movie, RecyclerVi
             MovieListViewHolder(binding)
 
         }
-
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

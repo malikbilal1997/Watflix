@@ -30,17 +30,17 @@ class HomeViewModel @Inject constructor(
         getAllMovies()
     }
 
-    fun getAllMovies() {
+    private fun getAllMovies() {
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
 
             movieRepo.getAllMovies().collect { movies ->
 
                 Timber.d("Movies List Size -> ${movies.size}")
 
                 _moviesResponse.value = Response.Success(movies)
-
             }
         }
     }
+
 }

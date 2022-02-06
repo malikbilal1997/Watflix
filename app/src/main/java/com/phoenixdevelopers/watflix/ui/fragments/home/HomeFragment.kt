@@ -1,6 +1,8 @@
 package com.phoenixdevelopers.watflix.ui.fragments.home
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -16,6 +18,7 @@ import com.intuit.sdp.R.dimen._12sdp
 import com.intuit.sdp.R.dimen._4sdp
 import com.phoenixdevelopers.watflix.R
 import com.phoenixdevelopers.watflix.databinding.FragmentHomeBinding
+import com.phoenixdevelopers.watflix.databinding.FragmentSplashBinding
 import com.phoenixdevelopers.watflix.model.Movie
 import com.phoenixdevelopers.watflix.ui.fragments.home.adapter.MoviesAdapter
 import com.phoenixdevelopers.watflix.utils.Response
@@ -34,7 +37,9 @@ class HomeFragment : Fragment() {
 
     private var moviesList: List<Movie> = emptyList()
 
-    private lateinit var binding: FragmentHomeBinding
+    private var _binding: FragmentHomeBinding? = null
+
+    private val binding get() = _binding!!
 
     private val homeViewModel: HomeViewModel by viewModels()
 
@@ -44,7 +49,7 @@ class HomeFragment : Fragment() {
         bundle: Bundle?
     ): View {
 
-        binding = FragmentHomeBinding
+        _binding = FragmentHomeBinding
             .inflate(inflater, container, false);
 
         return binding.root
@@ -60,12 +65,10 @@ class HomeFragment : Fragment() {
 
         initMoviesObserver()
 
-    }
-
-    private fun setupSearchList() {
-
+        setupSearchViewList()
 
     }
+
 
     private fun setupListAdapter() {
 
@@ -78,20 +81,16 @@ class HomeFragment : Fragment() {
 
         setupListAdapter()
 
+        changeListPadding()
+
         with(binding.moviesRecyclerView) {
 
             adapter = moviesAdapter
 
             layoutManager = if (::mLayoutManager.isInitialized) {
-
-                setPadding(0, 0, 0, 0)
-
                 mLayoutManager
 
             } else {
-
-                setPadding(_12sdp, 0, 0, _4sdp)
-
                 GridLayoutManager(requireContext(), 2)
             }
         }
@@ -101,10 +100,49 @@ class HomeFragment : Fragment() {
 
         binding.changeLayout.setOnClickListener {
 
+            changeListPadding()
+
             changeLayoutButton()
+
             changeLayoutManager()
         }
     }
+
+    private fun setupSearchViewList() {
+
+        binding.searchEdit.addTextChangedListener(object : TextWatcher {
+
+            override fun afterTextChanged(editable: Editable?) = Unit
+
+            override fun beforeTextChanged(
+                sequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) = Unit
+
+            override fun onTextChanged(
+                sequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+
+                if (sequence != null) {
+
+                    filterMoviesList(sequence)
+
+                } else {
+
+                    moviesAdapter.submitList(moviesList)
+                }
+
+            }
+
+        })
+
+    }
+
 
     private fun changeLayoutButton() {
 
@@ -170,4 +208,54 @@ class HomeFragment : Fragment() {
         }
     }
 
+    private fun changeListPadding() {
+
+        if (areMoviesShownAsGrid) {
+
+            applyGridPadding()
+
+        } else {
+
+            applyListPadding()
+        }
+
+    }
+
+    private fun applyListPadding() {
+
+        binding.moviesRecyclerView.setPadding(
+            0, 0, 0, 0
+        )
+    }
+
+    private fun applyGridPadding() {
+
+        binding.moviesRecyclerView.setPadding(
+            resources.getDimensionPixelSize(_12sdp), 0,
+            resources.getDimensionPixelSize(_4sdp), 0
+        )
+
+    }
+
+    private fun navigateToDetail(movieId:String) {
+
+
+    }
+
+    private fun filterMoviesList(query: CharSequence) {
+
+        val filteredList = moviesList.filter {
+
+            it.title.lowercase().contains(query.toString().lowercase())
+        }
+
+        moviesAdapter.submitList(filteredList)
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        _binding = null
+    }
 }

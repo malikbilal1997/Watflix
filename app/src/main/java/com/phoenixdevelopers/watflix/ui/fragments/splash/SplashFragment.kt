@@ -33,8 +33,8 @@ class SplashFragment : Fragment() {
 
     }
 
-    override fun onViewCreated(view: View, bundle: Bundle?) {
-        super.onViewCreated(view, bundle)
+    override fun onResume() {
+        super.onResume()
 
         gotoHomeScreen()
 
