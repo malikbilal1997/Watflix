@@ -14,7 +14,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.intuit.sdp.R.dimen._12sdp
 import com.intuit.sdp.R.dimen._4sdp
 import com.phoenixdevelopers.watflix.R
@@ -31,11 +30,9 @@ class HomeFragment : Fragment() {
 
     private var areMoviesShownAsGrid = true
 
-    private lateinit var moviesAdapter: MoviesAdapter
-
-    private lateinit var mLayoutManager: LayoutManager
-
     private var moviesList: List<Movie> = emptyList()
+
+    private lateinit var moviesAdapter: MoviesAdapter
 
     private var _binding: FragmentHomeBinding? = null
 
@@ -91,11 +88,13 @@ class HomeFragment : Fragment() {
 
             adapter = moviesAdapter
 
-            layoutManager = if (::mLayoutManager.isInitialized) {
-                mLayoutManager
+            layoutManager = if (areMoviesShownAsGrid) {
+
+                GridLayoutManager(requireContext(), 2)
 
             } else {
-                GridLayoutManager(requireContext(), 2)
+
+                LinearLayoutManager(requireContext())
             }
         }
     }
@@ -147,7 +146,6 @@ class HomeFragment : Fragment() {
 
     }
 
-
     private fun changeLayoutButton() {
 
         if (areMoviesShownAsGrid) {
@@ -163,21 +161,10 @@ class HomeFragment : Fragment() {
 
     private fun changeLayoutManager() {
 
-        mLayoutManager = if (areMoviesShownAsGrid) {
-
-            LinearLayoutManager(
-                requireContext()
-            )
-
-        } else {
-            GridLayoutManager(
-                requireContext(), 2
-            )
-        }
-
         areMoviesShownAsGrid = !areMoviesShownAsGrid
 
         setupRecyclerView()
+
     }
 
     private fun initMoviesObserver() {
@@ -235,8 +222,7 @@ class HomeFragment : Fragment() {
     private fun applyGridPadding() {
 
         binding.moviesRecyclerView.setPadding(
-            resources.getDimensionPixelSize(_12sdp), 0,
-            resources.getDimensionPixelSize(_4sdp), 0
+            resources.getDimensionPixelSize(_12sdp), 0, resources.getDimensionPixelSize(_4sdp), 0
         )
 
     }
