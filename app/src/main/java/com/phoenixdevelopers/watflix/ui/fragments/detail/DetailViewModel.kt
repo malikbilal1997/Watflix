@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.phoenixdevelopers.watflix.model.Movie
 import com.phoenixdevelopers.watflix.repos.MoviesRepo
+import com.phoenixdevelopers.watflix.utils.EMPTY_STRING
+import com.phoenixdevelopers.watflix.utils.MOVIE_ID_ARG_NAME
 import com.phoenixdevelopers.watflix.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,8 +23,11 @@ class DetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     init {
-        val movieId: String = savedStateHandle["movieId"] ?: ""
+
+        val movieId: String = savedStateHandle[MOVIE_ID_ARG_NAME] ?: EMPTY_STRING
+
         getMovieData(movieId)
+
     }
 
     private val _movieDetails = MutableStateFlow<Response<Movie>>(Response.Loading)
@@ -31,20 +36,13 @@ class DetailViewModel @Inject constructor(
     private val _similarMovies = MutableStateFlow<Response<List<Movie>>>(Response.Loading)
     val similarMovies = _similarMovies.asStateFlow()
 
-    private fun getMovieData(movieId: String) {
+    fun getMovieData(movieId: String) {
 
         viewModelScope.launch {
-            runCatching {
-                moviesRepo.getMovieDetail(movieId)
-            }.onFailure {
-                _movieDetails.value = Response.Error(it)
 
-            }.onSuccess {
+            _movieDetails.value = Response.Loading
+            _similarMovies.value = Response.Loading
 
-                Timber.d("Movies Id -> ${it.id}")
-
-                _movieDetails.value = Response.Success(it)
-            }
             launch {
 
                 try {
@@ -59,7 +57,18 @@ class DetailViewModel @Inject constructor(
 
                     _similarMovies.value = Response.Error(exception)
                 }
+            }
 
+            runCatching {
+                moviesRepo.getMovieDetail(movieId)
+            }.onFailure {
+                _movieDetails.value = Response.Error(it)
+
+            }.onSuccess {
+
+                Timber.d("Movies Id -> ${it.id}")
+
+                _movieDetails.value = Response.Success(it)
             }
         }
     }

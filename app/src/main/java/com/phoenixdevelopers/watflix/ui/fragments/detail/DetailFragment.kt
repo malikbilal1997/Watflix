@@ -3,17 +3,23 @@ package com.phoenixdevelopers.watflix.ui.fragments.detail
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.*
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.phoenixdevelopers.watflix.databinding.FragmentDetailBinding
+import com.phoenixdevelopers.watflix.model.Movie
 import com.phoenixdevelopers.watflix.ui.fragments.detail.adapter.SimilarAdapter
 import com.phoenixdevelopers.watflix.utils.Response
+import com.phoenixdevelopers.watflix.utils.getImageUrl
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class DetailFragment : Fragment() {
 
     private lateinit var moviesAdapter: SimilarAdapter
@@ -26,7 +32,7 @@ class DetailFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, bundle: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentDetailBinding
             .inflate(inflater, container, false);
@@ -40,6 +46,8 @@ class DetailFragment : Fragment() {
 
         initListAdapter()
 
+        setupRecyclerView()
+
         initClickListener()
 
         initDetailObserver()
@@ -49,7 +57,19 @@ class DetailFragment : Fragment() {
 
     private fun initListAdapter() {
 
-        moviesAdapter = SimilarAdapter()
+        moviesAdapter = SimilarAdapter { movie ->
+
+            detailViewModel.getMovieData(movie.id)
+
+        }
+
+    }
+
+    private fun setupRecyclerView() {
+
+        with(binding.moviesRecyclerView) {
+            adapter = moviesAdapter
+        }
 
     }
 
@@ -58,13 +78,44 @@ class DetailFragment : Fragment() {
         binding.backButton.setOnClickListener {
 
             findNavController().navigateUp()
-
         }
-
     }
 
     private fun initDetailObserver() {
 
+        viewLifecycleOwner.lifecycleScope.launch {
+
+            detailViewModel.movieDetails.collect { response ->
+
+                when (response) {
+
+                    is Response.Loading -> {
+
+                        binding.mainLayout.visibility = GONE
+                        binding.progressBar.visibility = VISIBLE
+
+                    }
+
+                    is Response.Success -> {
+
+                        setMovieDetails(response.item)
+
+                        binding.mainLayout.visibility = VISIBLE
+                        binding.progressBar.visibility = GONE
+
+                    }
+
+                    is Response.Error -> {
+
+                        binding.mainLayout.visibility = GONE
+                        binding.progressBar.visibility = GONE
+
+                    }
+                }
+
+            }
+
+        }
 
     }
 
@@ -91,6 +142,22 @@ class DetailFragment : Fragment() {
                 }
             }
         }
+
+    }
+
+    private fun setMovieDetails(movie: Movie) {
+
+        binding.itemYear.text = movie.year
+        binding.itemName.text = movie.title
+        binding.itemGenre.text = movie.genre
+        binding.itemRating.text = movie.rating
+        binding.itemDetails.text = movie.summary
+
+        Glide.with(requireContext())
+            .load(getImageUrl(movie.coverImage)).into(binding.itemImage)
+
+        Glide.with(requireContext())
+            .load(getImageUrl(movie.backgroundImage)).into(binding.movieCoverImage)
 
     }
 

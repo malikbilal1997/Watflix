@@ -5,14 +5,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.bumptech.glide.Glide
-import com.phoenixdevelopers.watflix.databinding.ItemMovieGridBinding
 import com.phoenixdevelopers.watflix.databinding.ItemMovieHorizontalBinding
 import com.phoenixdevelopers.watflix.model.Movie
-import com.phoenixdevelopers.watflix.ui.fragments.home.adapter.MoviesAdapter.MovieGridViewHolder
 import com.phoenixdevelopers.watflix.utils.MovieDiff
 import com.phoenixdevelopers.watflix.utils.getImageUrl
 
-class SimilarAdapter : ListAdapter<Movie, ViewHolder>(MovieDiff) {
+class SimilarAdapter(
+
+    private val onItemClickLister: (Movie) -> Unit
+
+) : ListAdapter<Movie, ViewHolder>(MovieDiff) {
 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -25,20 +27,27 @@ class SimilarAdapter : ListAdapter<Movie, ViewHolder>(MovieDiff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 
-        return MovieGridViewHolder(
-
-            ItemMovieGridBinding.inflate(
-                LayoutInflater
-                    .from(parent.context), parent, false
+        return MovieViewHolder(
+            ItemMovieHorizontalBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
             )
         )
     }
 
-    class MovieViewHolder(
+    inner class MovieViewHolder(
 
         private val binding: ItemMovieHorizontalBinding
 
     ) : ViewHolder(binding.root) {
+
+        init {
+            binding.root.setOnClickListener {
+
+                onItemClickLister(getItem(adapterPosition))
+            }
+        }
 
         fun bind(movie: Movie) {
 

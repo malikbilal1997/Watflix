@@ -92,20 +92,16 @@
         tools:orientation="vertical" />
 
 
-    <com.google.android.material.progressindicator.CircularProgressIndicator
+    <ProgressBar
         android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminate="true"
+        android:indeterminateTint="?attr/colorPrimary"
         android:visibility="gone"
-        app:indicatorColor="?attr/colorSurface"
-        app:indicatorSize="@dimen/_28sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:trackColor="?attr/colorOnSurface"
-        app:trackCornerRadius="@dimen/_2sdp"
-        app:trackThickness="@dimen/_2sdp" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
