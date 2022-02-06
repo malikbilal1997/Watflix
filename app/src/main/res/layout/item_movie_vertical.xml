@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/item_image"
+        android:layout_width="@dimen/_96sdp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@id/item_divider"
+        app:layout_constraintDimensionRatio="H, 16:10"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:riv_border_color="?attr/colorOnSurface"
+        app:riv_border_width="@dimen/_1sdp"
+        app:riv_corner_radius="@dimen/_8sdp"
+        app:riv_mutate_background="true"
+        tools:src="@tools:sample/backgrounds/scenic" />
+
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:fontFamily="@font/ubuntu_medium"
+        android:includeFontPadding="false"
+        android:textSize="@dimen/_10ssp"
+        app:layout_constraintBottom_toTopOf="@+id/item_genre"
+        app:layout_constraintEnd_toStartOf="@id/item_year"
+        app:layout_constraintStart_toEndOf="@id/item_image"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="@sample/movies" />
+
+    <TextView
+        android:id="@+id/item_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:fontFamily="@font/ubuntu_regular"
+        android:includeFontPadding="false"
+        android:textSize="@dimen/_10ssp"
+        app:layout_constraintBaseline_toBaselineOf="@id/item_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_name"
+        tools:text="@sample/year" />
+
+    <TextView
+        android:id="@+id/item_genre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:ellipsize="end"
+        android:fontFamily="@font/ubuntu_regular"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textSize="@dimen/_10ssp"
+        app:layout_constraintBottom_toTopOf="@+id/item_details"
+        app:layout_constraintEnd_toStartOf="@id/item_rating"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/item_image"
+        app:layout_constraintTop_toBottomOf="@+id/item_name"
+        tools:text="@sample/genre" />
+
+    <TextView
+        android:id="@+id/item_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:drawablePadding="@dimen/_8sdp"
+        android:fontFamily="@font/ubuntu_regular"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:textSize="@dimen/_10ssp"
+        app:drawableStartCompat="@drawable/ic_star"
+        app:drawableTint="?attr/colorPrimary"
+        app:layout_constraintBaseline_toBaselineOf="@id/item_genre"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_genre"
+        tools:text="@sample/rating" />
+
+    <TextView
+        android:id="@+id/item_details"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:ellipsize="end"
+        android:fontFamily="@font/ubuntu_regular"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textSize="@dimen/_10ssp"
+        app:layout_constraintBottom_toTopOf="@id/item_divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_image"
+        app:layout_constraintTop_toBottomOf="@+id/item_genre"
+        tools:text="@tools:sample/lorem/random" />
+
+    <View
+        android:id="@+id/item_divider"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:background="?attr/colorOnSurface"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

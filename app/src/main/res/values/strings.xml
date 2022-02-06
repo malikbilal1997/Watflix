@@ -1,0 +1,8 @@
+<resources>
+
+    <string name="app_name">Watflix</string>
+
+    <string name="search">Search</string>
+    <string name="suggestions">Suggestions</string>
+
+</resources>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/item_image"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="H, 16:10"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:riv_border_color="?attr/colorOnSurface"
+        app:riv_border_width="@dimen/_1sdp"
+        app:riv_corner_radius="@dimen/_8sdp"
+        app:riv_mutate_background="true"
+        tools:src="@tools:sample/backgrounds/scenic" />
+
+    <TextView
+        android:id="@+id/item_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:ellipsize="end"
+        android:fontFamily="@font/ubuntu_medium"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:textSize="@dimen/_10ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/item_rating"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/item_image"
+        tools:text="@sample/movies" />
+
+    <TextView
+        android:id="@+id/item_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:drawablePadding="@dimen/_8sdp"
+        android:fontFamily="@font/ubuntu_regular"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:textSize="@dimen/_10ssp"
+        app:drawableStartCompat="@drawable/ic_star"
+        app:drawableTint="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_name"
+        app:layout_constraintTop_toBottomOf="@id/item_image"
+        tools:text="@sample/rating" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
