@@ -77,9 +77,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- android:paddingStart="@dimen/_12sdp"
-       android:paddingEnd="@dimen/_4sdp" -->
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/movies_recycler_view"
         android:layout_width="0dp"

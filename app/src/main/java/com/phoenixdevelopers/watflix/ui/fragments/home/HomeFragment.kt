@@ -3,13 +3,20 @@ package com.phoenixdevelopers.watflix.ui.fragments.home
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
+import com.intuit.sdp.R.dimen._12sdp
+import com.intuit.sdp.R.dimen._4sdp
+import com.phoenixdevelopers.watflix.R
 import com.phoenixdevelopers.watflix.databinding.FragmentHomeBinding
+import com.phoenixdevelopers.watflix.model.Movie
 import com.phoenixdevelopers.watflix.ui.fragments.home.adapter.MoviesAdapter
 import com.phoenixdevelopers.watflix.utils.Response
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,6 +29,10 @@ class HomeFragment : Fragment() {
     private var areMoviesShownAsGrid = true
 
     private lateinit var moviesAdapter: MoviesAdapter
+
+    private lateinit var mLayoutManager: LayoutManager
+
+    private var moviesList: List<Movie> = emptyList()
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -45,56 +56,86 @@ class HomeFragment : Fragment() {
 
         initClickListener()
 
-        setupListAdapter()
+        setupRecyclerView()
 
         initMoviesObserver()
 
     }
 
+    private fun setupSearchList() {
+
+
+    }
+
     private fun setupListAdapter() {
 
-        moviesAdapter = MoviesAdapter(areMoviesShownAsGrid)
+        moviesAdapter = MoviesAdapter(areMoviesShownAsGrid).also {
+            it.submitList(moviesList)
+        }
+    }
+
+    private fun setupRecyclerView() {
+
+        setupListAdapter()
 
         with(binding.moviesRecyclerView) {
 
             adapter = moviesAdapter
 
-            layoutManager = GridLayoutManager(
-                requireContext(), 2
-            )
-        }
-    }
+            layoutManager = if (::mLayoutManager.isInitialized) {
 
-    private fun changeLayoutManager() {
+                setPadding(0, 0, 0, 0)
 
-        areMoviesShownAsGrid = !areMoviesShownAsGrid
+                mLayoutManager
 
-        if (areMoviesShownAsGrid) {
+            } else {
 
-            with(binding.moviesRecyclerView) {
+                setPadding(_12sdp, 0, 0, _4sdp)
 
-                layoutManager = LinearLayoutManager(
-                    requireContext()
-                )
-            }
-
-        } else {
-
-            with(binding.moviesRecyclerView) {
-
-                layoutManager = GridLayoutManager(
-                    requireContext(), 2
-                )
+                GridLayoutManager(requireContext(), 2)
             }
         }
-
     }
 
     private fun initClickListener() {
 
         binding.changeLayout.setOnClickListener {
+
+            changeLayoutButton()
             changeLayoutManager()
         }
+    }
+
+    private fun changeLayoutButton() {
+
+        if (areMoviesShownAsGrid) {
+
+            binding.changeLayout.setImageResource(R.drawable.ic_grid_view)
+
+        } else {
+
+            binding.changeLayout.setImageResource(R.drawable.ic_view_list)
+        }
+
+    }
+
+    private fun changeLayoutManager() {
+
+        mLayoutManager = if (areMoviesShownAsGrid) {
+
+            LinearLayoutManager(
+                requireContext()
+            )
+
+        } else {
+            GridLayoutManager(
+                requireContext(), 2
+            )
+        }
+
+        areMoviesShownAsGrid = !areMoviesShownAsGrid
+
+        setupRecyclerView()
     }
 
     private fun initMoviesObserver() {
@@ -107,19 +148,21 @@ class HomeFragment : Fragment() {
 
                     is Response.Loading -> {
 
-                        binding.progressBar.visibility = View.VISIBLE
-
+                        binding.progressBar.visibility = VISIBLE
                     }
 
                     is Response.Success -> {
 
-                        moviesAdapter.submitList(response.item)
-                        binding.progressBar.visibility = View.GONE
+                        moviesList = response.item
+
+                        moviesAdapter.submitList(moviesList)
+
+                        binding.progressBar.visibility = GONE
                     }
 
                     is Response.Error -> {
 
-                        binding.progressBar.visibility = View.GONE
+                        binding.progressBar.visibility = GONE
 
                     }
                 }
