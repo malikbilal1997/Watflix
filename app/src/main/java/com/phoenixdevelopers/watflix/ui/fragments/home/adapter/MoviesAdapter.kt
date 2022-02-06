@@ -11,7 +11,11 @@ import com.phoenixdevelopers.watflix.model.Movie
 import com.phoenixdevelopers.watflix.utils.MovieDiff
 import com.phoenixdevelopers.watflix.utils.getImageUrl
 
-class MoviesAdapter(private val isGrid: Boolean) : ListAdapter<Movie, RecyclerView.ViewHolder>(MovieDiff) {
+class MoviesAdapter(
+    private val isGrid: Boolean,
+    private val onItemClickLister: (Movie) -> Unit
+) :
+    ListAdapter<Movie, RecyclerView.ViewHolder>(MovieDiff) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
@@ -55,11 +59,18 @@ class MoviesAdapter(private val isGrid: Boolean) : ListAdapter<Movie, RecyclerVi
         super.onBindViewHolder(holder, position, payloads)
     }
 
-    class MovieGridViewHolder(
+    inner class MovieGridViewHolder(
 
         private val binding: ItemMovieGridBinding
 
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.root.setOnClickListener {
+
+                onItemClickLister(getItem(adapterPosition))
+            }
+        }
 
         fun bind(movie: Movie) {
 
@@ -74,11 +85,18 @@ class MoviesAdapter(private val isGrid: Boolean) : ListAdapter<Movie, RecyclerVi
         }
     }
 
-    class MovieListViewHolder(
+    inner class MovieListViewHolder(
 
         private val binding: ItemMovieVerticalBinding
 
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.root.setOnClickListener {
+
+                onItemClickLister(getItem(adapterPosition))
+            }
+        }
 
         fun bind(movie: Movie) {
 

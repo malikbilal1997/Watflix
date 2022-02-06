@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
@@ -18,7 +19,6 @@ import com.intuit.sdp.R.dimen._12sdp
 import com.intuit.sdp.R.dimen._4sdp
 import com.phoenixdevelopers.watflix.R
 import com.phoenixdevelopers.watflix.databinding.FragmentHomeBinding
-import com.phoenixdevelopers.watflix.databinding.FragmentSplashBinding
 import com.phoenixdevelopers.watflix.model.Movie
 import com.phoenixdevelopers.watflix.ui.fragments.home.adapter.MoviesAdapter
 import com.phoenixdevelopers.watflix.utils.Response
@@ -72,7 +72,11 @@ class HomeFragment : Fragment() {
 
     private fun setupListAdapter() {
 
-        moviesAdapter = MoviesAdapter(areMoviesShownAsGrid).also {
+        moviesAdapter = MoviesAdapter(areMoviesShownAsGrid) { movie ->
+
+            navigateToDetail(movie.id)
+
+        }.also {
             it.submitList(moviesList)
         }
     }
@@ -98,7 +102,7 @@ class HomeFragment : Fragment() {
 
     private fun initClickListener() {
 
-        binding.changeLayout.setOnClickListener {
+        binding.changeButton.setOnClickListener {
 
             changeListPadding()
 
@@ -148,11 +152,11 @@ class HomeFragment : Fragment() {
 
         if (areMoviesShownAsGrid) {
 
-            binding.changeLayout.setImageResource(R.drawable.ic_grid_view)
+            binding.changeButton.setImageResource(R.drawable.ic_grid_view)
 
         } else {
 
-            binding.changeLayout.setImageResource(R.drawable.ic_view_list)
+            binding.changeButton.setImageResource(R.drawable.ic_view_list)
         }
 
     }
@@ -178,7 +182,7 @@ class HomeFragment : Fragment() {
 
     private fun initMoviesObserver() {
 
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
 
             homeViewModel.movieResponse.collect { response ->
 
@@ -237,9 +241,12 @@ class HomeFragment : Fragment() {
 
     }
 
-    private fun navigateToDetail(movieId:String) {
+    private fun navigateToDetail(movieId: String) {
 
+        val action = HomeFragmentDirections
+            .actionHomeFragmentToDetailFragment(movieId)
 
+        findNavController().navigate(action)
     }
 
     private fun filterMoviesList(query: CharSequence) {
